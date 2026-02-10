@@ -246,6 +246,7 @@ pub struct ExtensionsSettingsContent {
 #[derive(
     Copy,
     Clone,
+    Default,
     Debug,
     Serialize,
     Deserialize,
@@ -253,7 +254,6 @@ pub struct ExtensionsSettingsContent {
     MergeFrom,
     PartialEq,
     Eq,
-    Default,
     strum::VariantArray,
 )]
 pub enum BaseKeymapContent {
@@ -516,6 +516,10 @@ pub struct GitPanelSettingsContent {
     ///
     /// Default: icon
     pub status_style: Option<StatusStyle>,
+    /// How untracked files are displayed and staged in the git panel.
+    ///
+    /// Default: classic
+    pub untracked_changes: Option<GitPanelUntrackedChanges>,
     /// How and when the scrollbar should be displayed.
     ///
     /// Default: inherits editor scrollbar settings
@@ -542,6 +546,33 @@ pub struct GitPanelSettingsContent {
     ///
     /// Default: false
     pub tree_view: Option<bool>,
+}
+
+#[derive(
+    Copy,
+    Clone,
+    Default,
+    Debug,
+    Serialize,
+    Deserialize,
+    JsonSchema,
+    MergeFrom,
+    PartialEq,
+    Eq,
+    strum::VariantArray,
+    strum::VariantNames,
+)]
+#[serde(rename_all = "snake_case")]
+pub enum GitPanelUntrackedChanges {
+    /// Preserve the classic Zed behavior: show untracked separately while Stage All includes them.
+    #[default]
+    Classic,
+    /// Show untracked files alongside tracked files and include them in stage/commit-all actions.
+    Mixed,
+    /// Show untracked files in their own section and exclude them from stage/commit-all actions.
+    Separate,
+    /// Hide untracked files entirely and exclude them from stage/commit-all actions.
+    Hidden,
 }
 
 #[derive(
@@ -988,6 +1019,7 @@ pub struct RemoteSettingsContent {
 )]
 pub struct DevContainerConnection {
     pub name: String,
+    pub remote_user: String,
     pub container_id: String,
     pub use_podman: bool,
 }
@@ -1064,6 +1096,16 @@ pub struct ReplSettingsContent {
     ///
     /// Default: 50
     pub inline_output_max_length: Option<usize>,
+    /// Maximum number of lines of output to display before scrolling.
+    /// Set to 0 to disable output height limits.
+    ///
+    /// Default: 0
+    pub output_max_height_lines: Option<usize>,
+    /// Maximum number of columns of output to display before scaling images.
+    /// Set to 0 to disable output width limits.
+    ///
+    /// Default: 0
+    pub output_max_width_columns: Option<usize>,
 }
 
 /// Settings for configuring the which-key popup behaviour.

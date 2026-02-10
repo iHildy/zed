@@ -385,6 +385,12 @@ impl VsCodeSettings {
         skip_default(GitPanelSettingsContent {
             button: self.read_bool("git.enabled"),
             fallback_branch_name: self.read_string("git.defaultBranchName"),
+            untracked_changes: self.read_enum("git.untrackedChanges", |value| match value {
+                "mixed" => Some(GitPanelUntrackedChanges::Mixed),
+                "separate" => Some(GitPanelUntrackedChanges::Separate),
+                "hidden" => Some(GitPanelUntrackedChanges::Hidden),
+                _ => None,
+            }),
             ..Default::default()
         })
     }
@@ -392,7 +398,6 @@ impl VsCodeSettings {
     fn project_settings_content(&self) -> ProjectSettingsContent {
         ProjectSettingsContent {
             all_languages: AllLanguageSettingsContent {
-                features: None,
                 edit_predictions: self.edit_predictions_settings_content(),
                 defaults: self.default_language_settings_content(),
                 languages: Default::default(),

@@ -2667,13 +2667,16 @@ Configuration for various AI model providers including API URLs and authenticati
 
 ## LSP Document Colors
 
-- Description: Whether to show document color information from the language server
+- Description: How to render LSP `textDocument/documentColor` colors in the editor
 - Setting: `lsp_document_colors`
-- Default: `true`
+- Default: `inlay`
 
 **Options**
 
-`boolean` values
+1. `inlay`: Render document colors as inlay hints near the color text.
+2. `background`: Draw a background behind the color text.
+3. `border`: Draw a border around the color text.
+4. `none`: Do not query and render document colors.
 
 ## Max Tabs
 
@@ -4109,7 +4112,17 @@ Example command to set the title: `echo -e "\e]2;New Title\007";`
 
 **Options**
 
-1. Use the current file's project directory. Fallback to the first project directory strategy if unsuccessful.
+1. Use the current file's directory, falling back to the project directory, then the first project in the workspace.
+
+```json [settings]
+{
+  "terminal": {
+    "working_directory": "current_file_directory"
+  }
+}
+```
+
+2. Use the current file's project directory. Fallback to the first project directory strategy if unsuccessful.
 
 ```json [settings]
 {
@@ -4119,7 +4132,7 @@ Example command to set the title: `echo -e "\e]2;New Title\007";`
 }
 ```
 
-2. Use the first project in this workspace's directory. Fallback to using this platform's home directory.
+3. Use the first project in this workspace's directory. Fallback to using this platform's home directory.
 
 ```json [settings]
 {
@@ -4129,7 +4142,7 @@ Example command to set the title: `echo -e "\e]2;New Title\007";`
 }
 ```
 
-3. Always use this platform's home directory if it can be found.
+4. Always use this platform's home directory if it can be found.
 
 ```json [settings]
 {
@@ -4139,7 +4152,7 @@ Example command to set the title: `echo -e "\e]2;New Title\007";`
 }
 ```
 
-4. Always use a specific directory. This value will be shell expanded. If this path is not a valid directory the terminal will default to this platform's home directory.
+5. Always use a specific directory. This value will be shell expanded. If this path is not a valid directory the terminal will default to this platform's home directory.
 
 ```json [settings]
 {
@@ -4737,6 +4750,7 @@ See the [debugger page](../debugger.md) for more information about debugging sup
     "dock": "left",
     "default_width": 360,
     "status_style": "icon",
+    "untracked_changes": "classic",
     "fallback_branch_name": "main",
     "sort_by_path": false,
     "collapse_untracked_diff": false,
@@ -4753,6 +4767,7 @@ See the [debugger page](../debugger.md) for more information about debugging sup
 - `dock`: Where to dock the git panel. Can be `left` or `right`
 - `default_width`: Default width of the git panel
 - `status_style`: How to display git status. Can be `label_color` or `icon`
+- `untracked_changes`: How untracked files are displayed and staged. Can be `classic`, `mixed`, `separate`, or `hidden`
 - `fallback_branch_name`: What branch name to use if `init.defaultBranch` is not set
 - `sort_by_path`: Whether to sort entries in the panel by path or by status (the default)
 - `collapse_untracked_diff`: Whether to collapse untracked files in the diff panel
